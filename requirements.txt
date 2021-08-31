@@ -1,7 +1,7 @@
 anyascii==0.2.0
 beautifulsoup4==4.9.3
 bs4==0.0.1
-click==8.0.1
+click==7.1.2
 colorama==0.4.4
 contractions==0.0.52
 Counter==1.0.0

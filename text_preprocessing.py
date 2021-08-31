@@ -21,6 +21,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+nltk.download('stopwords')
 
 
 # In[2]:

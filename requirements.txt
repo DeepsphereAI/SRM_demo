@@ -27,6 +27,8 @@ sklearn==0.0
 soupsieve==2.2.1
 textblob==0.15.3
 textsearch==0.0.21
+tenacity>=6.2.0
+plotly == 5.3.0
 threadpoolctl==2.2.0
 tqdm==4.62.1
 wordcloud==1.8.1

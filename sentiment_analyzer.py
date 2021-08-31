@@ -16,6 +16,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 from collections import Counter
 nltk.download('vader_lexicon')
+nltk.download('punkt')
 
 
 # In[2]:

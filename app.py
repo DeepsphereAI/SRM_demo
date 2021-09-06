@@ -253,7 +253,7 @@ if uploaded_file is not None:
     
     st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
     
-    st.sidebar.button("Refresh"):
+    st.sidebar.button("Refresh")
         
     
     

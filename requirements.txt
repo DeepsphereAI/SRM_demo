@@ -30,3 +30,4 @@ textsearch==0.0.21
 threadpoolctl==2.2.0
 tqdm==4.62.1
 wordcloud==1.8.1
+PyAutoGUI == 0.9.53

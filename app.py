@@ -19,8 +19,6 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import streamlit.components.v1 as components
 import time
-os.environ['DISPLAY']= ':0'
-import pyautogui
 import base64
 LOGO_IMAGE = "./Logo.png"
 

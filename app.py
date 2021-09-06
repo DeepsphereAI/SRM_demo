@@ -253,8 +253,8 @@ if uploaded_file is not None:
     
     st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
     
-    if st.sidebar.button("Refresh"):
-        pyautogui.hotkey('f5')
+    st.sidebar.button("Refresh"):
+        
     
     
     

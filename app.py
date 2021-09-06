@@ -7,7 +7,6 @@ import pandas as pd
 import streamlit as st
 from sentiment_analyzer import sentiment_analysis, get_noun, top_neg_word, frequency_counter
 from text_preprocessing import clean_review
-import pandas as pd
 import io
 import base64
 import os
@@ -18,6 +17,46 @@ import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import plotly.express as px
+import streamlit.components.v1 as components
+import time
+
+
+import base64
+
+LOGO_IMAGE = "./Logo.png"
+
+st.markdown(
+    """
+    <style>
+    .container {
+        display: flex;
+    }
+    .logo-text {
+        font-weight:700 !important;
+        font-size:50px !important;
+        color: #f9a01b !important;
+        padding-top: 75px !important;
+    }
+    .logo-img {
+        
+        float:right;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div class="container">
+        <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}" width="160" height="100">
+       
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 st.title("Patient Review Sentiment Analyzer")
 def download_button(object_to_download, download_filename, button_text, pickle_it=False):
@@ -102,28 +141,71 @@ def download_button(object_to_download, download_filename, button_text, pickle_i
 
     return dl_link
 
-uploaded_file = st.file_uploader("Choose a file")
+
+
+    
+uploaded_file = st.file_uploader("Upload Input Data File")
+if uploaded_file is None:
+    st.error("Please upload file")
 if uploaded_file is not None:
+    st.success("File Uploaded Successfully")
     df = pd.read_csv(uploaded_file, encoding ='latin1')
     df.columns =['Reviews']
     list_text = df.Reviews.tolist()
-    print(f'Total Number of Reviews : {len(list_text)}')
-    analysis = sentiment_analysis(list_text)
-    st.write(analysis)
-    clean_text = []
-    for text in list_text:
-        text = clean_review(text)
-        clean_text.append(text)
-    textss = ' '.join(map(str, clean_text))
     
-    filename = 'model_outcome.xlsx'
-    download_button_str = download_button(analysis, filename, f'Click here to download {filename}', pickle_it=False)
-    st.markdown(download_button_str, unsafe_allow_html=True)
-    
-    
-    
-    if st.checkbox("Wordcloud"):
+    left, centre, right = st.columns(3)
+    with left:
+        st.write('Step 1')
+    with centre:
+        st.write('Text Processing')
+    with right:
+        process = st.button('Process input reviews')
         
+    
+    if process:
+        st.write(f"Sample Processed Text : {clean_review(list_text[0])}")
+        
+    
+    analysis = sentiment_analysis(list_text)
+    
+
+    left, centre, right = st.columns(3)
+    left.write('Step 2')
+    centre.write('Sentimental Analysis')
+    with right:
+        sentiments = st.button('Generate Sentiments')
+    if sentiments:
+        sent_dict = dict(zip(analysis.Reviews, analysis.Sentiment))
+        vAR_firstSent= next(iter((sent_dict.items())) )
+        st.write(f" {vAR_firstSent[0]} : {vAR_firstSent[1]}")
+        #st.write(first_pair[1])
+        
+        
+ 
+    left, centre, right = st.columns(3)
+    left.write('Step 3')
+    centre.write('Rank Sentiments')
+    with right:
+        rank = st.button('Generate Ranking')
+     
+    if rank:
+        rank_dict = dict(zip(analysis.Reviews, analysis.Ranking))
+        vAR_firstRank= next(iter((rank_dict.items())) )
+        #st.write(f" {vAR_firstRank[0]} : {vAR_firstRank[1]}")
+        #st.write(rank_dict)
+    
+    left, centre, right = st.columns(3)
+    left.write('Step 4')
+    centre.write('Visualization')
+    with right:
+        wordcloud = st.button("Generate Wordcloud")
+        
+    if wordcloud:
+        clean_text = []
+        for text in list_text:
+            text = clean_review(text)
+            clean_text.append(text)
+            textss = ' '.join(map(str, clean_text))
         nouns = get_noun(clean_text)
         #only_neg = top_neg_word(clean_text)
         #print(f'Negative word: {top_neg_word(clean_text)}')
@@ -136,13 +218,49 @@ if uploaded_file is not None:
         plt.axis("off")
         st.pyplot(fig)
         
-        
-        
-    if st.checkbox("Word Frequency Chart"):
+    left, centre, right = st.columns(3)
+    left.write('Step 5')
+    centre.write('Visualization')
+    with right:
+        freq_chart = st.button("Generate Word Frequency Chart")
+    if freq_chart:
         freq = frequency_counter(list_text)
         fig = px.bar(freq, x="count", y="word", height=1000)
         #fig, axes = plt.subplots(3,1,figsize=(8,20))
         st.plotly_chart(fig)        
+        
+        
+    
+    left, centre, right = st.columns(3)
+    left.write('Step 6')
+    centre.write('Model Outcome')
+    with right:
+        outcome_df = st.button("View Model Outcome")
+        
+    if outcome_df:
+        st.write(analysis)
+        
+       
+    filename = 'model_outcome.xlsx'
+    download_button_str = download_button(analysis, filename, f' Download Model Outcome', pickle_it=False)
+    outcome = st.markdown(download_button_str, unsafe_allow_html=True) 
+   
+    
+    st.markdown('<h2> <br><font style="color: #5500FF;">Powered by Google Cloud & Colab</font></h2>',unsafe_allow_html=True)
+    st.markdown('<hr style="border-top: 6px solid #8c8b8b; width: 150%;margin-left:-180px">',unsafe_allow_html=True) 
+
+    st.sidebar.selectbox("",
+       ('Libraries Used','pandas','numpy', 'sklearn','nltk', 'streamlit','wordcloud', 'matplotlib'))
+    
+    st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
+    
+    if st.sidebar.button("Refresh"):
+        st.experimental_rerun()
+    
+    
+    
+    
+      
         
 
 

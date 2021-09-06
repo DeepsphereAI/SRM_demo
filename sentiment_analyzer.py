@@ -5,7 +5,6 @@
 
 import pandas as pd
 import numpy as np
-import pandas as pd
 import joblib
 import nltk
 from nltk.tokenize import word_tokenize
@@ -15,8 +14,6 @@ from text_preprocessing import clean_review
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 from collections import Counter
-nltk.download('vader_lexicon')
-nltk.download('punkt')
 
 
 # In[2]:
@@ -127,8 +124,9 @@ def frequency_counter(sentence):
     counted = Counter(new_tokens)
     #print(counted)
     word_freq = pd.DataFrame(counted.items(),columns=['word','count']).sort_values(by='count',ascending=False)
+    freq_filtered = word_freq[word_freq['count'] > 1]
     #print(word_freq)
-    return word_freq
+    return freq_filtered
 
 # In[15]:
 
@@ -142,9 +140,9 @@ def sentiment_analysis(texts):
     vader_score = []
     for text in texts:
         text = clean_review(text)
-        print(f'Cleaning Reviews ............')
+        #print(f'Cleaning Reviews ............')
         sentiment = get_sentiment(text)
-        print(f'Classified Sentiment for the review :{sentiment}')
+        #print(f'Classified Sentiment for the review :{sentiment}')
         sentiment_list.append(sentiment)
         sid_obj = SentimentIntensityAnalyzer() 
         sentiment_dict = sid_obj.polarity_scores(text) 

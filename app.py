@@ -21,7 +21,7 @@ import streamlit.components.v1 as components
 import time
 import pyautogui
 import base64
-export DISPLAY=:0
+os.environ['DISPLAY']=:1
 LOGO_IMAGE = "./Logo.png"
 
 st.markdown(

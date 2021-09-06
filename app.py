@@ -19,8 +19,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import streamlit.components.v1 as components
 import time
-
-
+import pyautogui
 import base64
 
 LOGO_IMAGE = "./Logo.png"
@@ -255,7 +254,7 @@ if uploaded_file is not None:
     st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
     
     if st.sidebar.button("Refresh"):
-        st.experimental_rerun()
+        pyautogui.hotkey('f5')
     
     
     

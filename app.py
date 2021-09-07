@@ -55,7 +55,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
+custom_button = f"""
+<style>
+div.stButton > button:first-child {{ border: 1px solid ;  width: 100%; color: blue;}}
+<style>
+"""
+st.markdown(custom_button, unsafe_allow_html=True)
 
 st.title("Patient Review Sentiment Analyzer")
 def download_button(object_to_download, download_filename, button_text, pickle_it=False):

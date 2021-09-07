@@ -22,6 +22,9 @@ import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 nltk.download('vader_lexicon')
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
 
 
 

@@ -20,6 +20,8 @@ import plotly.express as px
 import streamlit.components.v1 as components
 import time
 import base64
+from bokeh.models.widgets import Div
+
 LOGO_IMAGE = "./Logo.png"
 
 st.markdown(
@@ -251,7 +253,11 @@ if uploaded_file is not None:
     
     st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
     
-    st.sidebar.button("Refresh")
+    if st.sidebar.button("Clear/Reset"):
+        js = "window.location.href = 'http://localhost:8501/'"  # Current tab
+        html = '<img src onerror="{}">'.format(js)
+        div = Div(text=html)
+        st.bokeh_chart(div)
         
     
     

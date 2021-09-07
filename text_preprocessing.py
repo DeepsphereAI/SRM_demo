@@ -21,6 +21,8 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+nltk.download('vader_lexicon')
+
 
 
 # In[2]:

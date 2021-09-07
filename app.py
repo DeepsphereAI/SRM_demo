@@ -57,7 +57,7 @@ st.markdown(
 
 custom_button = f"""
 <style>
-div.stButton > button:first-child {{ border: 1px solid ;  width: 100%; color: blue;}}
+div.stButton > button:first-child {{ border: 1px solid ;  width: 100%;}}
 <style>
 """
 st.markdown(custom_button, unsafe_allow_html=True)
@@ -202,7 +202,7 @@ if uploaded_file is not None:
     left.write('Step 4')
     centre.write('Visualization')
     with right:
-        wordcloud = st.button("Generate Wordcloud")
+        wordcloud = st.button("Wordcloud")
         
     if wordcloud:
         clean_text = []
@@ -226,7 +226,7 @@ if uploaded_file is not None:
     left.write('Step 5')
     centre.write('Visualization')
     with right:
-        freq_chart = st.button("Generate Word Frequency Chart")
+        freq_chart = st.button("Word Frequency Chart")
     if freq_chart:
         freq = frequency_counter(list_text)
         fig = px.bar(freq, x="count", y="word", height=1000)
@@ -250,7 +250,7 @@ if uploaded_file is not None:
     outcome = st.markdown(download_button_str, unsafe_allow_html=True) 
    
     
-    st.markdown('<h2> <br><font style="color: #5500FF;">Powered by Google Cloud & Colab</font></h2>',unsafe_allow_html=True)
+    st.markdown('<h4> <br><font style="color: #5500FF;">Powered by Google Cloud & Colab</font></h2>',unsafe_allow_html=True)
     st.markdown('<hr style="border-top: 6px solid #8c8b8b; width: 150%;margin-left:-180px">',unsafe_allow_html=True) 
 
     st.sidebar.selectbox("",

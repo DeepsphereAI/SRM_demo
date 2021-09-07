@@ -3,6 +3,7 @@ beautifulsoup4==4.9.3
 bs4==0.0.1
 click >=7.0
 colorama==0.4.4
+openpyxl == 3.0.7
 contractions==0.0.52
 Counter==1.0.0
 cycler==0.10.0

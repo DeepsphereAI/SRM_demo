@@ -189,9 +189,9 @@ if uploaded_file is not None:
      
     if rank:
         rank_dict = dict(zip(analysis.Reviews, analysis.Ranking))
-        vAR_firstRank= next(iter((rank_dict.items())) )
-        #st.write(f" {vAR_firstRank[0]} : {vAR_firstRank[1]}")
-        #st.write(rank_dict)
+        rank_data= pd.DataFrame(list(rank_dict.items()), columns=['Reviews', 'Rank'])
+        st.write(rank_data)
+        
     
     left, centre, right = st.columns(3)
     left.write('Step 4')

@@ -256,7 +256,10 @@ if uploaded_file is not None:
     st.sidebar.selectbox("",
        ('Libraries Used','pandas','numpy', 'sklearn','nltk', 'streamlit','wordcloud', 'matplotlib'))
     
+    st.sidebar.selectbox("",('Model Implemented','Multinomial Naive Bayes','VADER'))
+    
     st.sidebar.selectbox("",('GCP Services Used','VM Instance','Compute Engine'))
+   
     
     if st.sidebar.button("Clear/Reset"):
         js = "window.location.href = 'http://localhost:8501/'"  # Current tab

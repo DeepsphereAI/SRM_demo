@@ -100,6 +100,12 @@ def clean_review(text):
     #lower case 
     text = text.lower()
     
+    #replace full stop connecting words with full stop and space 
+    #this is to avoid joining of two words when removing punctuations
+    
+    text = text.replace('.', '. ')
+    
+    
     #remove special characters
     text = strip_special_characters(text)
 

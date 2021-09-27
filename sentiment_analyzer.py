@@ -14,6 +14,8 @@ from text_preprocessing import clean_review
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 from collections import Counter
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
 import re
 
 

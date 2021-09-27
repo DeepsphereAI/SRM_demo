@@ -180,6 +180,7 @@ def frequency_counter(sentence):
     word_freq_df = word_freq_df.sort_values(by=['count'], ascending=False)
    
     return word_freq_df
+
 # In[15]:
 
 def sentiment_analysis(texts):

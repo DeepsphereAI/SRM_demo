@@ -14,6 +14,7 @@ from text_preprocessing import clean_review
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 from collections import Counter
+import re
 
 
 # In[2]:
@@ -112,22 +113,71 @@ def top_neg_word(text):
     top_word = max(neg_polarity, key=neg_polarity.get)
     return top_word
 
-def frequency_counter(sentence):
-    sentence =" ".join(sentence)
-    new_tokens = word_tokenize(sentence)
-    new_tokens = [t.lower() for t in new_tokens]
-    new_tokens =[t for t in new_tokens if t not in stopwords.words('english')]
-    new_tokens = [t for t in new_tokens if t.isalpha()]
-    lemmatizer = WordNetLemmatizer()
-    new_tokens =[lemmatizer.lemmatize(t) for t in new_tokens]
-    #counts the words, pairs and trigrams
-    counted = Counter(new_tokens)
-    #print(counted)
-    word_freq = pd.DataFrame(counted.items(),columns=['word','count']).sort_values(by='count',ascending=False)
-    freq_filtered = word_freq[word_freq['count'] > 1]
-    #print(word_freq)
-    return freq_filtered
+def mmr(doc_embedding, word_embeddings, words, top_n, diversity):
 
+    # Extract similarity within words, and between words and the document
+    word_doc_similarity = cosine_similarity(word_embeddings, doc_embedding)
+    word_similarity = cosine_similarity(word_embeddings)
+
+    # Initialize candidates and already choose best keyword/keyphras
+    keywords_idx = [np.argmax(word_doc_similarity)]
+    candidates_idx = [i for i in range(len(words)) if i != keywords_idx[0]]
+
+    for _ in range(top_n - 1):
+        # Extract similarities within candidates and
+        # between candidates and selected keywords/phrases
+        candidate_similarities = word_doc_similarity[candidates_idx, :]
+        target_similarities = np.max(word_similarity[candidates_idx][:, keywords_idx], axis=1)
+
+        # Calculate MMR
+        mmr = (1-diversity) * candidate_similarities - diversity * target_similarities.reshape(-1, 1)
+        mmr_idx = candidates_idx[np.argmax(mmr)]
+
+        # Update keywords & candidates
+        keywords_idx.append(mmr_idx)
+        candidates_idx.remove(mmr_idx)
+
+    return [words[idx] for idx in keywords_idx]
+
+
+def frequency_counter(sentence):
+    """
+    Finds frequency of words in cleaned text using BERT keyword extraction 
+    """
+    
+    sentence =" ".join(sentence)
+    cleaned_text = clean_review(sentence)
+    print(cleaned_text)
+    
+    n_gram_range = (3, 3)
+    stop_words = "english"
+
+    # Extract candidate words/phrases
+    count = CountVectorizer(ngram_range=n_gram_range, stop_words=stop_words).fit([cleaned_text])
+    candidates = count.get_feature_names()
+
+    model = SentenceTransformer('distilbert-base-nli-mean-tokens')
+    doc_embedding = model.encode([cleaned_text])
+    candidate_embeddings = model.encode(candidates)
+    
+    sentence = mmr(doc_embedding, candidate_embeddings, candidates, top_n=20, diversity=0.1)
+    
+    sentence_list= (' '.join(sentence)).split()
+    keywords = ((" ".join(sorted(set(sentence_list), key=sentence_list.index)))).split()
+    words = cleaned_text.split()
+    
+    to_search = re.compile('|'.join(sorted(keywords, key=len, reverse=True)))
+    matches = (to_search.search(el) for el in words)
+    counts = Counter(match.group() for match in matches if match)
+    count_word = dict(counts)
+  
+    word_freq_df = (pd.DataFrame([count_word]).T).reset_index()
+    
+    word_freq_df.columns = word_freq_df.columns.map(str)
+    word_freq_df.rename(columns = {'index':'word', '0':'count'}, inplace = True)
+    word_freq_df = word_freq_df.sort_values(by=['count'], ascending=False)
+   
+    return word_freq_df
 # In[15]:
 
 def sentiment_analysis(texts):
